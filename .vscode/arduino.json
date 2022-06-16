@@ -1,0 +1,5 @@
+{
+    "board": "adafruit:avr:itsybitsy32u4_5V",
+    "port": "/dev/tty.usbmodem141201",
+    "sketch": "arduino/u_cube/u_cube.ino"
+}

@@ -1,0 +1,26 @@
+# bitboard.o:
+# 	gcc -c
+# CPPFLAGS=-g $(shell root-config --cflags)
+
+# this works and makes a binary but
+# ❯ ./bitboard
+# zsh: exec format error: ./bitboard
+
+CPPFLAGS=-g
+# CXX=g++
+CXX=${HOME}/Applications/Arduino.app/Contents/Java/hardware/tools/avr/bin/avr-g++
+# LDFLAGS=-g $(shell root-config --ldflags)
+LDFLAGS=-g -I$(HOME)/Applications/Arduino.app/Contents/Java/hardware/arduino/avr/cores/arduino -I$(HOME)/Applications/Arduino.app/Contents/Java/hardware/arduino/avr/variants/standard -I${HOME}/Documents/Arduino/libraries/FastLED/src/
+# LDLIBS=$(shell root-config --libs)
+LDLIBS=
+SRCS=bitboard.cpp
+OBJS=$(subst .pp, .o, $(SRCS))
+
+%.o: %.CPPFLAGS
+	$(CC) $(CFLAGS) $(CPPFLAGS) -c $<
+
+# all: bitboard.o
+# 	gcc -o bitboard bitboard.h bitbo
+
+all: $(OBJS)
+	$(CXX) $(LDFLAGS) -o bitboard $(OBJS) $(LDLIBS)
