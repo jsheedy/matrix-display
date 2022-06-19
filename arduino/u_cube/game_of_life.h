@@ -33,31 +33,29 @@ void lightweight_space_ship(uint8_t x, uint8_t y)
 void update_board() {
   uint8_t sum;
   uint8_t t = (millis() / 50) % 255;
+  uint8_t bitboard2[NUM_LEDS / 8];
 
   // flip on random cell
-  bb_set(random(1, WIDTH - 1), random(1, HEIGHT - 1), bitboard);
+  bb_set(random(0, WIDTH), random(0, HEIGHT), bitboard);
 
   for (uint8_t x = 0; x < WIDTH; x++)
   {
     for (uint8_t y = 0; y < HEIGHT; y++)
     {
-      sum = (uint8_t)bb_get(x - 1, y - 1, bitboard)
-        + (uint8_t)bb_get(x - 1, y, bitboard)
-        + (uint8_t)bb_get(x - 1, y
-        + 1, bitboard)
-        + (uint8_t)bb_get(x, y - 1, bitboard)
-        + (uint8_t)bb_get(x, y
-        + 1, bitboard)
-        + (uint8_t)bb_get(x
-        + 1, y - 1, bitboard)
-        + (uint8_t)bb_get(x + 1, y, bitboard)
-        + (uint8_t)bb_get(x + 1, y + 1, bitboard);
+      sum = bb_get(x - 1, y - 1, bitboard)
+        + bb_get(x - 1, y, bitboard)
+        + bb_get(x - 1, y + 1, bitboard)
+        + bb_get(x, y - 1, bitboard)
+        + bb_get(x, y + 1, bitboard)
+        + bb_get(x + 1, y - 1, bitboard)
+        + bb_get(x + 1, y, bitboard)
+        + bb_get(x + 1, y + 1, bitboard);
 
       if (sum == 3)
       {
         // cell survives or new cell born
         bb_set(x, y, bitboard2);
-        leds[XY(x, y)] = ColorFromPalette(PartyColors_p, t);
+        leds[XY(x, y)] =ColorFromPalette(PartyColors_p, t+16);
       }
       else if (sum == 2 && bb_get(x, y, bitboard))
       {

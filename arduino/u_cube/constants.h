@@ -10,7 +10,6 @@ const uint8_t BUTTON_PIN = 7;
 
 CRGB leds[NUM_LEDS];
 
-uint8_t bitboard2[NUM_LEDS / 8];
 uint8_t bitboard[NUM_LEDS / 8];
 
 #endif

@@ -9,6 +9,7 @@
 #include "game_of_life.h"
 // #include "gifs.h"
 #include "plasma.h"
+#include "lines.h"
 // #include "palettes.h"
 
 volatile short mode = 0;
@@ -168,6 +169,7 @@ void bitboard_test() {
 typedef void (*Modes[])();
 
 Modes modes = {
+  lines,
     gol,
     gol2,
     bitboard_test,
