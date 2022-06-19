@@ -1,3 +1,5 @@
+#include <EEPROM.h>
+
 #include <FastLED.h>
 //#include <power_mgt.h>
 
@@ -12,14 +14,15 @@
 #include "lines.h"
 // #include "palettes.h"
 
-volatile short mode = 0;
+volatile uint8_t mode = 0;
 uint8_t palette_i = 0;
 
 #define ARRAY_SIZE(A) (sizeof(A) / sizeof((A)[0]))
 
 void setup() {
 
-  FastLED.addLeds<APA102, BGR>(leds, NUM_LEDS); //.setCorrection(TypicalLEDStrip);
+  mode = EEPROM.read(0);
+  FastLED.addLeds<APA102, BGR>(leds, NUM_LEDS).setCorrection(TypicalLEDStrip);
   FastLED.setBrightness(40);
 
   pinMode(BUTTON_PIN, INPUT_PULLUP);
@@ -191,6 +194,7 @@ void isr()
   {
     last_interrupt_time = millis();
     mode = (mode + 1) % ARRAY_SIZE(modes);
+    EEPROM.write(0, mode);
   }
 }
 
