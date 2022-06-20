@@ -49,9 +49,9 @@ CRGBPalette16 palettes[4] = {
 void plasma_lava() {
   plasma(LavaColors_p);
 }
-void plasma_ocean() {
-  plasma(OceanColors_p);
-}
+// void plasma_ocean() {
+//   plasma(OceanColors_p);
+// }
 void plasma_clouds() {
   plasma(CloudColors_p);
 }
@@ -59,16 +59,13 @@ void plasma_clouds() {
 //   plasma(palettes[1]);
 // }
 
-void solid_green() {
-  fill_solid(leds, NUM_LEDS, CRGB::Green);
-}
-
 // void gif_rgb() {
 //    draw_gif(rgb, rgb_length, 300);
 // }
 //void gif_amiga() {
 //   draw_gif(amiga, amiga_length, 100);
 //}
+
 void gol() {
   game_of_life(true);
 }
@@ -140,6 +137,25 @@ void x0r_texture_static() {
   x0r_texture(false);
 }
 
+void draw_atari() {
+  // plasma_clouds();
+  int idx = 0;
+  // fadeToBlackBy(leds, NUM_LEDS, 150);
+  fill_solid(leds, NUM_LEDS, CRGB::Black);
+  int offset = (millis() / 150) % 26;
+  for (uint8_t x = 0; x < WIDTH; x++)
+  {
+    for (uint8_t y = 0; y < HEIGHT; y++)
+    {
+        idx = (offset + y/8) * 8 + (x  / 8) * 8 + (8-(y % 8));
+        if (atari[idx] & (1 << (x % 8))) {
+          leds[XY(x, y)] = ColorFromPalette(PartyColors_p, ((y / 8) * 8 * 3 * 5) + 5*((x / 8) * 8));
+        }
+
+    }
+  }
+}
+
 void bitboard_test() {
   for (uint8_t x = 0; x < WIDTH; x++)
   {
@@ -147,7 +163,7 @@ void bitboard_test() {
     {
       if (bb_get(x, y, bitboard))
       {
-        leds[XY(x, y)] = ColorFromPalette(RainbowColors_p, 100);
+        leds[XY(x, y)] = ColorFromPalette(RainbowColors_p, millis() / 1000);
       }
     }
   }
@@ -172,6 +188,7 @@ void bitboard_test() {
 typedef void (*Modes[])();
 
 Modes modes = {
+  draw_atari,
   lines,
     gol,
     gol2,
@@ -180,7 +197,7 @@ Modes modes = {
     x0r_texture_static,
     x0r_texture_motion,
     jbl_ride,
-    plasma_ocean,
+    // plasma_ocean,
     // plasma_lava,
     // plasma_party,
     // gif_rgb,

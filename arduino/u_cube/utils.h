@@ -18,7 +18,7 @@ uint16_t XY(uint8_t x, uint8_t y) {
 
 void draw_circle(uint8_t x, uint8_t y, uint8_t r, CRGB color) {
   long r2 = r<<1;
-  int idx = 0;
+  uint16_t idx = 0;
   for (int i=x-r; i< x+r; i++) {
      for(int j=y-r;j< y+r; j++) {
         if ( ( pow((i - x), 2)+ pow((j-y), 2) ) < r2)   {
