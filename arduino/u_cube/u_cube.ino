@@ -138,18 +138,20 @@ void x0r_texture_static() {
 }
 
 void draw_char(short ul_x, short ul_y, uint8_t idx, CRGB color) {
-
-  for (uint8_t x=0; x < 8; x++)
+  uint8_t c;
+  for (uint8_t y=0; y < 8; y++)
   {
-    for (uint8_t y = 0; y < 8; y++)
+    c = pgm_read_byte(&atari[idx*8 + y]);
+    for (uint8_t x = 0; x < 8; x++)
     {
-      if (atari[idx*8 + y] & (1 << (x % 8)))
+      if (c & (1 << x ))
       {
         leds[XY(ul_x + x, ul_y + 8 - y)] = color;
       }
     }
   }
 }
+
 void draw_atari()
 {
   CRGB color = ColorFromPalette(RainbowColors_p, millis() / 25);
