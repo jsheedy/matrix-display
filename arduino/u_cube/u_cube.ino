@@ -139,6 +139,9 @@ void x0r_texture_static() {
 
 void draw_char(short ul_x, short ul_y, uint8_t idx, CRGB color) {
   uint8_t c;
+  if (idx == 32) { // space
+    return;
+  }
   for (uint8_t y=0; y < 8; y++)
   {
     c = pgm_read_byte(&atari[idx*8 + y]);
@@ -152,8 +155,35 @@ void draw_char(short ul_x, short ul_y, uint8_t idx, CRGB color) {
   }
 }
 
+void draw_string_horizontal(const char msg[], short x, short y, CRGB color)
+// void draw_string_horizontal(const __FlashStringHelper* msg, short x, short y, CRGB color)
+{
+  short i = 0;
+  uint8_t idx;
+  while (msg[i] != '\0')
+  {
+    if (msg[i] >= 65) {
+      idx = msg[i] - 65;
+    } else {
+      idx = 32; // space
+    }
+    draw_char(x, beatsin8(60, 2, HEIGHT-12, 0, x * 4), idx, color);
+    x -= 8;
+    i++;
+  }
+}
+
 void draw_atari()
 {
+  // fadeToBlackBy(leds, NUM_LEDS, 64);
+  x0r_texture_static();
+  CRGB color = ColorFromPalette(RainbowColors_p, millis() / 25);
+  short x = -16 + (millis() / 30) % 200;
+  short y = 12;
+  draw_string_horizontal("ITS SO BEAUTIFUL", x, y, color);
+}
+
+void draw_algorithm() {
   CRGB color = ColorFromPalette(RainbowColors_p, millis() / 25);
 
   draw_char(15, 15, 0, color); // A
