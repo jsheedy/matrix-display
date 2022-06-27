@@ -8,12 +8,15 @@ uint16_t XY_im(uint8_t x, uint8_t y)
   return (uint16_t)(x)*WIDTH + y;
 }
 
-uint16_t XY(uint8_t x, uint8_t y) {
-    if (x % 2 == 0) {
-      return XY_im(x, y);
-    } else {
-      return ((uint16_t)(x)+1) * WIDTH - 1 - y;
-    }
+uint16_t XY(short x, short y) {
+  if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT) {
+    return NUM_LEDS;
+  }
+  if (x % 2 == 0) {
+    return XY_im(x, y);
+  } else {
+    return ((uint16_t)(x)+1) * WIDTH - 1 - y;
+  }
 }
 
 void draw_circle(uint8_t x, uint8_t y, uint8_t r, CRGB color) {

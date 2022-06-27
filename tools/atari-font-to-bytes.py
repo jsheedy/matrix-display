@@ -21,8 +21,14 @@ def get_bytes():
         for i in range(26):
             for b in read_glyph(f):
                 yield b
-            print('')
 
+        # skip 5 to heart
+        for i in range(5 * 10):
+            f.readline()
+
+        for b in read_glyph(f):
+            yield b
+        print('')
 print("const uint8_t atari[208] PROGMEM = {")
 for i, b in enumerate(get_bytes()):
     print(b, end=', ')

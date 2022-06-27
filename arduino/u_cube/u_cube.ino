@@ -137,50 +137,79 @@ void x0r_texture_static() {
   x0r_texture(false);
 }
 
-void draw_atari() {
-  // plasma_clouds();
-  int idx = 0;
-  // fadeToBlackBy(leds, NUM_LEDS, 150);
-  fill_solid(leds, NUM_LEDS, CRGB::Black);
-  int offset = (millis() / 150) % 26;
+void draw_char(short ul_x, short ul_y, uint8_t idx, CRGB color) {
+
+  for (uint8_t x=0; x < 8; x++)
+  {
+    for (uint8_t y = 0; y < 8; y++)
+    {
+      if (atari[idx*8 + y] & (1 << (x % 8)))
+      {
+        leds[XY(ul_x + x, ul_y + 8 - y)] = color;
+      }
+    }
+  }
+}
+void draw_atari()
+{
+  CRGB color = ColorFromPalette(RainbowColors_p, millis() / 25);
+
+  draw_char(15, 15, 0, color); // A
+  draw_char(8, 15, 11, color);  // L
+  draw_char(1, 15, 6, color); // G
+
+  draw_char(15, 8, 14, color); // O
+  draw_char(8, 8, 17, color);  // R
+  draw_char(1 , 8, 8, color); // I
+
+  draw_char(15, 1, 19, color); // T
+  draw_char(8, 1, 7 , color);  // H
+  draw_char(1 , 1, 12, color); // M
+}
+
+void bitboard_test()
+{
+  fadeToBlackBy(leds, NUM_LEDS, 5);
+  long t = millis() / 5;
+
   for (uint8_t x = 0; x < WIDTH; x++)
   {
     for (uint8_t y = 0; y < HEIGHT; y++)
     {
-        idx = (offset + y/8) * 8 + (x  / 8) * 8 + (8-(y % 8));
-        if (atari[idx] & (1 << (x % 8))) {
-          leds[XY(x, y)] = ColorFromPalette(PartyColors_p, ((y / 8) * 8 * 3 * 5) + 5*((x / 8) * 8));
-        }
-
+      if (inoise8(x * 8, y * 8, t) > 150)
+      {
+        bb_set(x, y, bitboard);
+      }
+      else
+      {
+        bb_clear(x, y, bitboard);
+      }
     }
   }
-}
 
-void bitboard_test() {
+  update_board();
+
   for (uint8_t x = 0; x < WIDTH; x++)
   {
     for (uint8_t y = 0; y < HEIGHT; y++)
     {
       if (bb_get(x, y, bitboard))
       {
-        leds[XY(x, y)] = ColorFromPalette(RainbowColors_p, millis() / 1000);
+        leds[XY(x, y)] += ColorFromPalette(RainbowColors_p, millis() / 100);
       }
     }
   }
+}
 
-  fadeToBlackBy(leds, NUM_LEDS, 10);
-
+void noise_plasma()
+{
+  long t = millis() / 5;
+  uint8_t scale = map(inoise8(t), 20, 190, 1, 30); // beatsin8(2, 2, 40, 0, 0);
+  for (uint8_t x = 0; x < WIDTH; x++)
   {
-    for (uint8_t x = 0; x < WIDTH; x++)
+    for (uint8_t y = 0; y < HEIGHT; y++)
     {
-      for (uint8_t y = 0; y < HEIGHT; y++)
-      {
-        if (random8() > 250) {
-          bb_set(x, y, bitboard);
-        } else {
-          bb_clear(x, y, bitboard);
-        }
-      }
+      leds[XY(x, y)] = ColorFromPalette(PartyColors_p, map(inoise8((x)*scale, (y)*scale, t), 30, 180, 0, 255));
     }
   }
 }
@@ -188,18 +217,21 @@ void bitboard_test() {
 typedef void (*Modes[])();
 
 Modes modes = {
-  draw_atari,
-  lines,
+    draw_atari,
+    lines,
+    draw_atari,
     gol,
+    draw_atari,
     gol2,
+    draw_atari,
     bitboard_test,
-    // solid_green,
+    noise_plasma,
+    draw_atari,
     x0r_texture_static,
+    draw_atari,
     x0r_texture_motion,
+    draw_atari,
     jbl_ride,
-    // plasma_ocean,
-    // plasma_lava,
-    // plasma_party,
     // gif_rgb,
     //        gif_amiga,
 };
