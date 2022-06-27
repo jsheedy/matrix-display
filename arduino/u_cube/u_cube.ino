@@ -12,6 +12,7 @@
 // #include "gifs.h"
 #include "plasma.h"
 #include "lines.h"
+#include "fonts.h"
 // #include "palettes.h"
 
 volatile uint8_t mode = 0;
@@ -49,15 +50,10 @@ CRGBPalette16 palettes[4] = {
 void plasma_lava() {
   plasma(LavaColors_p);
 }
-// void plasma_ocean() {
-//   plasma(OceanColors_p);
-// }
+
 void plasma_clouds() {
   plasma(CloudColors_p);
 }
-// void plasma_party() {
-//   plasma(palettes[1]);
-// }
 
 // void gif_rgb() {
 //    draw_gif(rgb, rgb_length, 300);
@@ -137,68 +133,6 @@ void x0r_texture_static() {
   x0r_texture(false);
 }
 
-void draw_char(short ul_x, short ul_y, uint8_t idx, CRGB color) {
-  uint8_t c;
-  if (idx == 32) { // space
-    return;
-  }
-  for (uint8_t y=0; y < 8; y++)
-  {
-    c = pgm_read_byte(&atari[idx*8 + y]);
-    for (uint8_t x = 0; x < 8; x++)
-    {
-      if (c & (1 << x ))
-      {
-        leds[XY(ul_x + x, ul_y + 8 - y)] = color;
-      }
-    }
-  }
-}
-
-void draw_string_horizontal(const char msg[], short x, short y, CRGB color)
-// void draw_string_horizontal(const __FlashStringHelper* msg, short x, short y, CRGB color)
-{
-  short i = 0;
-  uint8_t idx;
-  while (msg[i] != '\0')
-  {
-    if (msg[i] >= 65) {
-      idx = msg[i] - 65;
-    } else {
-      idx = 32; // space
-    }
-    draw_char(x, beatsin8(60, 2, HEIGHT-12, 0, x * 4), idx, color);
-    x -= 8;
-    i++;
-  }
-}
-
-void draw_atari()
-{
-  // fadeToBlackBy(leds, NUM_LEDS, 64);
-  x0r_texture_static();
-  CRGB color = ColorFromPalette(RainbowColors_p, millis() / 25);
-  short x = -16 + (millis() / 30) % 200;
-  short y = 12;
-  draw_string_horizontal("ITS SO BEAUTIFUL", x, y, color);
-}
-
-void draw_algorithm() {
-  CRGB color = ColorFromPalette(RainbowColors_p, millis() / 25);
-
-  draw_char(15, 15, 0, color); // A
-  draw_char(8, 15, 11, color);  // L
-  draw_char(1, 15, 6, color); // G
-
-  draw_char(15, 8, 14, color); // O
-  draw_char(8, 8, 17, color);  // R
-  draw_char(1 , 8, 8, color); // I
-
-  draw_char(15, 1, 19, color); // T
-  draw_char(8, 1, 7 , color);  // H
-  draw_char(1 , 1, 12, color); // M
-}
-
 void bitboard_test()
 {
   fadeToBlackBy(leds, NUM_LEDS, 5);
@@ -251,18 +185,12 @@ typedef void (*Modes[])();
 Modes modes = {
     draw_atari,
     lines,
-    draw_atari,
-    gol,
-    draw_atari,
-    gol2,
-    draw_atari,
     bitboard_test,
+    gol2,
+    gol,
     noise_plasma,
-    draw_atari,
     x0r_texture_static,
-    draw_atari,
     x0r_texture_motion,
-    draw_atari,
     jbl_ride,
     // gif_rgb,
     //        gif_amiga,
