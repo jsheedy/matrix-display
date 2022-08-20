@@ -1,7 +1,7 @@
 #ifndef BITBOARD_H
 #define BITBOARD_H
 
-#include "constants.h"
+uint8_t bitboard[NUM_LEDS / 8];
 
 bool bb_get(int8_t x, int8_t y, uint8_t *bb)
 {
@@ -42,4 +42,37 @@ void bb_clear(uint8_t x, uint8_t y, uint8_t *bb)
   bb[bidx] = bb[bidx] & ~(1 << delta);
 }
 
+// void bitboard_test(CRGB *leds)
+// {
+//   fadeToBlackBy(leds, NUM_LEDS, 5);
+//   long t = millis() / 5;
+
+//   for (uint8_t x = 0; x < WIDTH; x++)
+//   {
+//     for (uint8_t y = 0; y < HEIGHT; y++)
+//     {
+//       if (inoise8(x * 8, y * 8, t) > 150)
+//       {
+//         bb_set(x, y, bitboard);
+//       }
+//       else
+//       {
+//         bb_clear(x, y, bitboard);
+//       }
+//     }
+//   }
+
+//   update_board(leds);
+
+//   for (uint8_t x = 0; x < WIDTH; x++)
+//   {
+//     for (uint8_t y = 0; y < HEIGHT; y++)
+//     {
+//       if (bb_get(x, y, bitboard))
+//       {
+//         leds[XY(x, y)] += ColorFromPalette(RainbowColors_p, millis() / 100);
+//       }
+//     }
+//   }
+// }
 #endif

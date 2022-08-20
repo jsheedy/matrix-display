@@ -1,7 +1,10 @@
+#ifndef LINES_H
+#define LINES_H
+
 #include "constants.h"
 #include "utils.h"
 
-void bresenham(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1)
+void bresenham(CRGB *leds, uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1)
 {
   // http://rosettacode.org/wiki/Bitmap/Bresenham%27s_line_algorithm#C
 
@@ -30,7 +33,7 @@ void bresenham(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1)
   }
 }
 
-void lines() {
+void lines(CRGB *leds) {
   fadeToBlackBy(leds, NUM_LEDS, 5);
   uint8_t x0=0, y0=0, x1=WIDTH-1, y1=HEIGHT-1;
   // int dt = map(beatsin8(5, 0, 255, 0, 0), 0, 255, 1000, 2000);
@@ -47,5 +50,6 @@ void lines() {
     x0 = WIDTH - 1 - x1;
   }
 
-  bresenham(x0, y0, x1, y1);
+  bresenham(leds, x0, y0, x1, y1);
 }
+#endif

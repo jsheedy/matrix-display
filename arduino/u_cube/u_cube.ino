@@ -4,7 +4,6 @@
 //#include <power_mgt.h>
 
 #include "constants.h"
-#include "bitboard.h"
 
 #include "utils.h"
 #include "image.h"
@@ -13,7 +12,12 @@
 #include "plasma.h"
 #include "lines.h"
 #include "fonts.h"
+#include "transforms.h"
 // #include "palettes.h"
+
+// add one extra which never gets lit but
+// allows XY() to fill in there
+CRGB leds[NUM_LEDS + 1];
 
 volatile uint8_t mode = 0;
 uint8_t palette_i = 0;
@@ -24,7 +28,7 @@ void setup() {
 
   mode = EEPROM.read(0);
   FastLED.addLeds<APA102, BGR>(leds, NUM_LEDS).setCorrection(TypicalLEDStrip);
-  FastLED.setBrightness(40);
+  FastLED.setBrightness(50);
 
   pinMode(BUTTON_PIN, INPUT_PULLUP);
 
@@ -47,12 +51,9 @@ CRGBPalette16 palettes[4] = {
   HeatColors_p,
 };
 
-void plasma_lava() {
-  plasma(LavaColors_p);
-}
 
-void plasma_clouds() {
-  plasma(CloudColors_p);
+void plasma_clouds(CRGB *leds) {
+  plasma(leds, CloudColors_p);
 }
 
 // void gif_rgb() {
@@ -62,16 +63,15 @@ void plasma_clouds() {
 //   draw_gif(amiga, amiga_length, 100);
 //}
 
-void gol() {
-  game_of_life(true);
+void gol(CRGB *leds) {
+  game_of_life(leds, true);
 }
 
-void gol2() {
-  game_of_life(false);
+void gol2(CRGB *leds) {
+  game_of_life(leds, false);
 }
 
-
-void jbl_ride() {
+void jbl_ride(CRGB *leds) {
   uint8_t scale = 10;
   uint8_t back_range;
   uint8_t mid_range;
@@ -79,9 +79,9 @@ void jbl_ride() {
 
   long t = millis() / 5;
 
-  plasma_clouds();
+  plasma_clouds(leds);
   // sun
-  draw_circle(beatsin8(3, 0, WIDTH, 0, 0), beatsin8(3, HEIGHT-8, HEIGHT, 0, 0), 8, CRGB::Yellow);
+  draw_circle(leds, beatsin8(3, 0, WIDTH, 0, 0), beatsin8(3, HEIGHT-8, HEIGHT, 0, 0), 8, CRGB::Yellow);
 
   for(uint8_t x=0; x<WIDTH; x++) {
     back_range = map(inoise8((3.0 * x/WIDTH) * scale * x + t), 30, 180, 0, HEIGHT - 10);
@@ -102,7 +102,7 @@ void jbl_ride() {
   }
 }
 
-void x0r_texture(bool move) {
+void x0r_texture(CRGB *leds, bool move) {
 
   uint8_t x0r = 0;
   uint8_t x0 = 0, y0 = 0;
@@ -126,48 +126,15 @@ void x0r_texture(bool move) {
   }
 }
 
-void x0r_texture_motion() {
-  x0r_texture(true);
-}
-void x0r_texture_static() {
-  x0r_texture(false);
+void x0r_texture_motion(CRGB *leds) {
+  x0r_texture(leds, true);
 }
 
-void bitboard_test()
-{
-  fadeToBlackBy(leds, NUM_LEDS, 5);
-  long t = millis() / 5;
-
-  for (uint8_t x = 0; x < WIDTH; x++)
-  {
-    for (uint8_t y = 0; y < HEIGHT; y++)
-    {
-      if (inoise8(x * 8, y * 8, t) > 150)
-      {
-        bb_set(x, y, bitboard);
-      }
-      else
-      {
-        bb_clear(x, y, bitboard);
-      }
-    }
-  }
-
-  update_board();
-
-  for (uint8_t x = 0; x < WIDTH; x++)
-  {
-    for (uint8_t y = 0; y < HEIGHT; y++)
-    {
-      if (bb_get(x, y, bitboard))
-      {
-        leds[XY(x, y)] += ColorFromPalette(RainbowColors_p, millis() / 100);
-      }
-    }
-  }
+void x0r_texture_static(CRGB *leds) {
+  x0r_texture(leds, false);
 }
 
-void noise_plasma()
+void noise_plasma(CRGB *leds)
 {
   long t = millis() / 5;
   uint8_t scale = map(inoise8(t), 20, 190, 1, 30); // beatsin8(2, 2, 40, 0, 0);
@@ -180,18 +147,55 @@ void noise_plasma()
   }
 }
 
-typedef void (*Modes[])();
+CRGB checkerboard(Point_t p, uint8_t size);
+CRGB checkerboard(Point_t p, uint8_t size)
+{
+
+  if ((
+          ((p.x % (size * 2)) < size) &&
+          ((p.y % (size * 2)) < size)) ||
+      (((p.x % (size * 2)) >= size) &&
+       ((p.y % (size * 2)) >= size)))
+  {
+    return ColorFromPalette(LavaColors_p, millis() / 2000);
+  }
+  else
+  {
+    return ColorFromPalette(OceanColors_p, millis() / 1999);
+  }
+}
+
+void lut_deformation(CRGB *leds)
+{
+  Point_t p;
+
+  float t = (float)millis() / 500.0;
+  float s = sin(t);
+  float c = cos(t);
+
+  for (p.x = 0; p.x < WIDTH; p.x++)
+  {
+    for (p.y = 0; p.y < HEIGHT; p.y++)
+    {
+      leds[XY(p.x, p.y)] = checkerboard(LUT_distort(p, s, c), beatsin8(2, 2, 24, 0, 0));
+    }
+  }
+}
+
+typedef void (*Modes[])(CRGB *);
 
 Modes modes = {
+    lut_deformation,
     draw_atari,
+    draw_algorithm,
     lines,
-    bitboard_test,
     gol2,
     gol,
     noise_plasma,
     x0r_texture_static,
     x0r_texture_motion,
     jbl_ride,
+    // bitboard_test,
     // gif_rgb,
     //        gif_amiga,
 };
@@ -209,8 +213,6 @@ void isr()
 
 void loop()
 {
-  // TODO: implement LUT deformation:
-  // https://iquilezles.org/articles/deform/
-  modes[mode]();
+  modes[mode](leds);
   FastLED.show();
 }

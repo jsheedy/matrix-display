@@ -1,7 +1,7 @@
 #ifndef FONTS_H
 #define FONTS_H
 
-void draw_char(short ul_x, short ul_y, uint8_t idx, CRGB color)
+void draw_char(CRGB *leds, short ul_x, short ul_y, uint8_t idx, CRGB color)
 {
     uint8_t c;
     if (idx == 32)
@@ -21,7 +21,7 @@ void draw_char(short ul_x, short ul_y, uint8_t idx, CRGB color)
     }
 }
 
-void draw_string_horizontal(const __FlashStringHelper *msg, int x0, CRGB color)
+void draw_string_horizontal(CRGB *leds, const __FlashStringHelper *msg, int x0, CRGB color)
 {
     char idx;
     char c = 1;
@@ -49,34 +49,35 @@ void draw_string_horizontal(const __FlashStringHelper *msg, int x0, CRGB color)
             idx = 32; // space
         }
         // y = beatsin8(60, 4, HEIGHT - 14, 0, i * 32);
-        draw_char(x, y, idx, color);
+        draw_char(leds, x, y, idx, color);
     } while (c != 0); //'\0');
 }
 
-void draw_atari()
+void draw_atari(CRGB *leds)
 {
     fadeToBlackBy(leds, NUM_LEDS, 80);
     CRGB color = ColorFromPalette(RainbowColors_p, millis() / 25);
     int x = -16 + (millis() / 30) % (60 * 8 + WIDTH + 8);
-    draw_string_horizontal(F("IF YOU KNOW THE WAY BROADLY YOU WILL SEE IT IN EVERYTHING"), x, color);
+    draw_string_horizontal(leds, F("IF YOU KNOW THE WAY BROADLY YOU WILL SEE IT IN EVERYTHING"), x, color);
     // draw_string_horizontal(F("THE MUSIC OF THE FUTURE WILL BE BASED ON ALGORITHMS"), x, color);
 }
 
-void draw_algorithm()
+void draw_algorithm(CRGB *leds)
 {
     CRGB color = ColorFromPalette(RainbowColors_p, millis() / 25);
+    fadeToBlackBy(leds, NUM_LEDS, 80);
 
-    draw_char(15, 15, 0, color); // A
-    draw_char(8, 15, 11, color); // L
-    draw_char(1, 15, 6, color);  // G
+    draw_char(leds, 15, 15, 0, color); // A
+    draw_char(leds, 8, 15, 11, color); // L
+    draw_char(leds, 1, 15, 6, color);  // G
 
-    draw_char(15, 8, 14, color); // O
-    draw_char(8, 8, 17, color);  // R
-    draw_char(1, 8, 8, color);   // I
+    draw_char(leds, 15, 8, 14, color); // O
+    draw_char(leds, 8, 8, 17, color);  // R
+    draw_char(leds, 1, 8, 8, color);   // I
 
-    draw_char(15, 1, 19, color); // T
-    draw_char(8, 1, 7, color);   // H
-    draw_char(1, 1, 12, color);  // M
+    draw_char(leds, 15, 1, 19, color); // T
+    draw_char(leds, 8, 1, 7, color);   // H
+    draw_char(leds, 1, 1, 12, color);  // M
 }
 
 #endif

@@ -1,4 +1,7 @@
-void plasma(CRGBPalette16 palette) {
+#ifndef PLASMA_H
+#define PLASMA_H
+
+void plasma(CRGB *leds, CRGBPalette16 palette) {
  for(uint8_t x=0; x<WIDTH; x++) {
     for(uint8_t y=0; y<HEIGHT; y++) {
       // FastLED provides several 'preset' palettes: RainbowColors_p, RainbowStripeColors_p,
@@ -21,3 +24,5 @@ void plasma(CRGBPalette16 palette) {
     }
   }
 }
+
+#endif

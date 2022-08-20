@@ -1,3 +1,6 @@
+#ifndef GAME_OF_LIFE_H
+#define GAME_OF_LIFE_H
+
 #include "constants.h"
 #include "bitboard.h"
 #include "utils.h"
@@ -30,7 +33,7 @@ void lightweight_space_ship(uint8_t x, uint8_t y)
   bb_set(x + 3, y + 3, bitboard);
 }
 
-void update_board() {
+void update_board(CRGB *leds) {
   uint8_t sum;
   uint8_t t = (millis() / 50) % 255;
   uint8_t bitboard2[NUM_LEDS / 8];
@@ -76,12 +79,12 @@ void update_board() {
 
 }
 
-void game_of_life(bool fade)
+void game_of_life(CRGB *leds, bool fade)
 {
 
   EVERY_N_MILLISECONDS(50)
   {
-    update_board();
+    update_board(leds);
     if (random(40) == 0)
     {
       glider(random(1, WIDTH - 4), random(1, HEIGHT - 4));
@@ -106,3 +109,5 @@ void game_of_life(bool fade)
     }
   }
 }
+
+#endif
