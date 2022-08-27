@@ -13,3 +13,16 @@ Point_t LUT_distort(Point_t p, float s, float c)
 
     return pp;
 }
+
+Point_t LUT_distort2(Point_t p, long t)
+{
+    Point_t pp;
+
+    float xt = ((p.x - WIDTH/2) * p.y) / 32;
+    // float yt = (float)p.y - t;
+
+    pp.x = xt;
+    pp.y = (p.y + t /100) % HEIGHT;
+
+    return pp;
+}

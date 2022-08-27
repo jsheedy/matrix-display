@@ -21,6 +21,7 @@ CRGB leds[NUM_LEDS + 1];
 
 volatile uint8_t mode = 0;
 uint8_t palette_i = 0;
+long t;
 
 #define ARRAY_SIZE(A) (sizeof(A) / sizeof((A)[0]))
 
@@ -147,29 +148,22 @@ void noise_plasma(CRGB *leds)
   }
 }
 
-CRGB checkerboard(Point_t p, uint8_t size);
-CRGB checkerboard(Point_t p, uint8_t size)
+bool checkerboard(Point_t p, uint8_t size);
+bool checkerboard(Point_t p, uint8_t size)
 {
-
-  if ((
-          ((p.x % (size * 2)) < size) &&
-          ((p.y % (size * 2)) < size)) ||
-      (((p.x % (size * 2)) >= size) &&
-       ((p.y % (size * 2)) >= size)))
-  {
-    return ColorFromPalette(LavaColors_p, millis() / 2000);
-  }
-  else
-  {
-    return ColorFromPalette(OceanColors_p, millis() / 1999);
-  }
+  return
+    (((p.x % (size * 2)) < size) &&
+    ((p.y % (size * 2)) < size))
+    ||
+    (((p.x % (size * 2)) >= size) &&
+    ((p.y % (size * 2)) >= size));
 }
 
 void lut_deformation(CRGB *leds)
 {
   Point_t p;
 
-  float t = (float)millis() / 500.0;
+  float t = (float)millis() / 800.0;
   float s = sin(t);
   float c = cos(t);
 
@@ -177,7 +171,57 @@ void lut_deformation(CRGB *leds)
   {
     for (p.y = 0; p.y < HEIGHT; p.y++)
     {
-      leds[XY(p.x, p.y)] = checkerboard(LUT_distort(p, s, c), beatsin8(2, 2, 24, 0, 0));
+      if (checkerboard(LUT_distort(p, s, c), beatsin8(1, 2, 24, 0, 0))) {
+        leds[XY(p.x, p.y)] = CRGB::FireBrick;
+      } else {
+        leds[XY(p.x, p.y)] = CRGB::DarkCyan;
+      }
+    }
+  }
+}
+
+void three_d_checker(CRGB *leds)
+{
+  // https://tixy.land/?code=%28%28%28x+-+8%29+%2F+y+%2B+t+*+5%29+%26+1+%5E+1+%2F+y+*+8+%26+1%29+*y+%2F+5%3B
+  Point_t p;
+  float t = (float) millis() / 500.0;
+  short x, y;
+  float i;
+  float xx;
+  CRGB c;
+
+  for (x = 0; x < WIDTH; x++)
+  {
+    for (y = 0; y < HEIGHT; y++)
+    {
+      i = (x - WIDTH/2) / (float)y + t;
+      xx = (float)((int)i & 1 ^ 1 / y * 15 & 1) * y;
+      i = xx * 16;
+      leds[XY(WIDTH - x - 1, HEIGHT-y - 1)] = CRGB(i, i, i);
+    }
+  }
+}
+
+void three_d_checker_vert(CRGB *leds)
+{
+  Point_t p;
+  t = millis();
+  for (p.x = 0; p.x < WIDTH; p.x++)
+  {
+    for (p.y = 0; p.y < HEIGHT; p.y++)
+    {
+      if (p.y > 16) {
+        leds[XY(p.x, p.y)] = CHSV(100, 100 + p.y * 4, 100);
+        continue;
+      }
+      if (checkerboard(LUT_distort2(p, t), 3))
+      {
+        leds[XY(p.x, p.y)] = CRGB::Black;
+      }
+      else
+      {
+        leds[XY(p.x, p.y)] = CRGB::Green;
+      }
     }
   }
 }
@@ -185,6 +229,8 @@ void lut_deformation(CRGB *leds)
 typedef void (*Modes[])(CRGB *);
 
 Modes modes = {
+    three_d_checker,
+    three_d_checker_vert,
     lut_deformation,
     draw_atari,
     draw_algorithm,
