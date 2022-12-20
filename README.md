@@ -2,6 +2,8 @@
 
 A 24x24 display made of a serpentine layout of DotStar (APA102) programmable RGB LEDs
 
+<https://youtu.be/nIXlsOFY0-k>
+
 ![matrix](assets/matrix.jpeg)
 
 ## microcontroller
