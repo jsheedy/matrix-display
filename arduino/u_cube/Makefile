@@ -40,4 +40,5 @@ build: u_cube.ino
 	arduino-cli compile --warnings all --fqbn adafruit:avr:itsybitsy32u4_5V  .
 
 upload: build
-	arduino-cli upload -v  --fqbn adafruit:avr:itsybitsy32u4_5V -programmer list
+	arduino-cli upload -v  --fqbn adafruit:avr:itsybitsy32u4_5V -p /dev/tty.usbmodem141301
+	# arduino-cli upload -v  --fqbn adafruit:avr:itsybitsy32u4_5V -programmer list

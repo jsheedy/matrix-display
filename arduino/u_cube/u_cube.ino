@@ -137,13 +137,27 @@ void x0r_texture_static(CRGB *leds) {
 
 void noise_plasma(CRGB *leds)
 {
-  long t = millis() / 5;
-  uint8_t scale = map(inoise8(t), 20, 190, 1, 30); // beatsin8(2, 2, 40, 0, 0);
+  long t = millis() / 19;
+  // uint8_t scale = map(inoise8(t), 20, 190, 1, 30); // beatsin8(2, 2, 40, 0, 0);
+  uint8_t scale = 10;
   for (uint8_t x = 0; x < WIDTH; x++)
   {
     for (uint8_t y = 0; y < HEIGHT; y++)
     {
       leds[XY(x, y)] = ColorFromPalette(PartyColors_p, map(inoise8((x)*scale, (y)*scale, t), 30, 180, 0, 255));
+    }
+  }
+}
+
+void noise_lava(CRGB *leds)
+{
+  long t = millis() / 19;
+  uint8_t scale = 12;
+  for (uint8_t x = 0; x < WIDTH; x++)
+  {
+    for (uint8_t y = 0; y < HEIGHT; y++)
+    {
+      leds[XY(x, y)] = ColorFromPalette(LavaColors_p, map(inoise8((x)*scale, (y)*scale, t), 30, 180, 0, 255));
     }
   }
 }
@@ -163,7 +177,7 @@ void lut_deformation(CRGB *leds)
 {
   Point_t p;
 
-  float t = (float)millis() / 800.0;
+  float t = (float)millis() / 1200.0;
   float s = sin(t);
   float c = cos(t);
 
@@ -171,10 +185,10 @@ void lut_deformation(CRGB *leds)
   {
     for (p.y = 0; p.y < HEIGHT; p.y++)
     {
-      if (checkerboard(LUT_distort(p, s, c), beatsin8(1, 2, 24, 0, 0))) {
-        leds[XY(p.x, p.y)] = CRGB::FireBrick;
+      if (checkerboard(LUT_distort(p, s, c), beatsin8(2, 4, 18, 0, 0))) {
+        leds[XY(p.x, p.y)] = CRGB::DarkMagenta;
       } else {
-        leds[XY(p.x, p.y)] = CRGB::DarkCyan;
+        leds[XY(p.x, p.y)] = CRGB::DarkOrange;
       }
     }
   }
@@ -230,7 +244,7 @@ typedef void (*Modes[])(CRGB *);
 
 Modes modes = {
     three_d_checker,
-    three_d_checker_vert,
+    // three_d_checker_vert,
     lut_deformation,
     draw_atari,
     draw_algorithm,
@@ -238,6 +252,7 @@ Modes modes = {
     gol2,
     gol,
     noise_plasma,
+    noise_lava,
     x0r_texture_static,
     x0r_texture_motion,
     jbl_ride,

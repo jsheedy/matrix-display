@@ -57,9 +57,8 @@ void draw_atari(CRGB *leds)
 {
     fadeToBlackBy(leds, NUM_LEDS, 80);
     CRGB color = ColorFromPalette(RainbowColors_p, millis() / 25);
-    int x = -16 + (millis() / 30) % (60 * 8 + WIDTH + 8);
-    draw_string_horizontal(leds, F("IF YOU KNOW THE WAY BROADLY YOU WILL SEE IT IN EVERYTHING"), x, color);
-    // draw_string_horizontal(F("THE MUSIC OF THE FUTURE WILL BE BASED ON ALGORITHMS"), x, color);
+    int x = -16 + (millis() / 30) % (26 * 8 + WIDTH + 8);
+    draw_string_horizontal(leds, F("JOSEPH LUVS CAROL         "), x, color);
 }
 
 void draw_algorithm(CRGB *leds)

@@ -37,7 +37,7 @@ void lines(CRGB *leds) {
   fadeToBlackBy(leds, NUM_LEDS, 5);
   uint8_t x0=0, y0=0, x1=WIDTH-1, y1=HEIGHT-1;
   // int dt = map(beatsin8(5, 0, 255, 0, 0), 0, 255, 1000, 2000);
-  int dt = 450;
+  int dt = 1150;
   int f = millis() % dt;
 
   if (f < dt/2) {
