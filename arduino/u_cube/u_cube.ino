@@ -10,6 +10,7 @@
 #include "game_of_life.h"
 // #include "gifs.h"
 #include "plasma.h"
+#include "sorting.h"
 #include "lines.h"
 #include "fonts.h"
 #include "transforms.h"
@@ -43,6 +44,7 @@ void setup() {
 
   // https://www.arduino.cc/reference/en/language/functions/external-interrupts/attachinterrupt/
   attachInterrupt(digitalPinToInterrupt(BUTTON_PIN), isr, FALLING);
+  randomizeArr();
 }
 
 CRGBPalette16 palettes[4] = {
@@ -243,6 +245,9 @@ void three_d_checker_vert(CRGB *leds)
 typedef void (*Modes[])(CRGB *);
 
 Modes modes = {
+    hbars,
+    vbars,
+    bubblesort,
     three_d_checker,
     // three_d_checker_vert,
     lut_deformation,
