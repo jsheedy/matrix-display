@@ -44,7 +44,7 @@ void setup() {
 
   // https://www.arduino.cc/reference/en/language/functions/external-interrupts/attachinterrupt/
   attachInterrupt(digitalPinToInterrupt(BUTTON_PIN), isr, FALLING);
-  randomizeArr();
+  shuffle();
 }
 
 CRGBPalette16 palettes[4] = {
@@ -211,7 +211,7 @@ void three_d_checker(CRGB *leds)
     for (y = 0; y < HEIGHT; y++)
     {
       i = (x - WIDTH/2) / (float)y + t;
-      xx = (float)((int)i & 1 ^ 1 / y * 15 & 1) * y;
+      xx = (float)((int)i & (1 ^ 1) / y * 15 & 1) * y;
       i = xx * 16;
       leds[XY(WIDTH - x - 1, HEIGHT-y - 1)] = CRGB(i, i, i);
     }

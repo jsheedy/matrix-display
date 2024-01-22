@@ -37,20 +37,18 @@ void vbars(CRGB *leds)
 }
 
 uint8_t arr[WIDTH];
-void randomizeArr() {
+void shuffle() {
+  // Fisher-Yates shuffle
   uint8_t j = 0;
   uint8_t i = 0;
-  // first place in order
+  // first initialize array, in order
   for (i=0; i < WIDTH; i++) {
     arr[i] = i+1;
   }
-  // (bogo)shuffle with xor swap
-  for (i = 0; i < WIDTH; i++)
+  // shuffle with xor swap
+  for (i = WIDTH-1; i > 0; i--)
   {
-    j = random(WIDTH);
-    if (i == j) {
-      continue;
-    }
+    j = random(i);
     // xor swap
     arr[i] = arr[i] ^ arr[j];
     arr[j] = arr[j] ^ arr[i];
@@ -58,7 +56,27 @@ void randomizeArr() {
   }
 }
 
-void singlesort() {
+void bubblesort_draw(CRGB *leds)
+{
+  for (uint8_t x = 0; x < WIDTH; x++)
+  {
+    for (uint8_t y = 0; y < HEIGHT; y++)
+    {
+      if (y < arr[x])
+      {
+        leds[XY(x, y)] = CRGB(255 - arr[x] * 10, arr[x] * 10, arr[x] * 4);
+      }
+      else
+      {
+        leds[XY(x, y)] = CRGB(0, 0, 0);
+        // leds[XY(x, y)] = CHSV(millis() / 50, 255, 90);
+      }
+    }
+  }
+}
+
+void singlesort(CRGB *leds)
+{
   // one iteration of sort and draw
   uint8_t i = 0;
   uint8_t j = 0;
@@ -78,24 +96,20 @@ void singlesort() {
     }
   }
   if (inOrder) {
+    FastLED.delay(2000);
+    for (i=0; i< 15; i++) {
+      shuffle();
+      bubblesort_draw(leds);
+      FastLED.delay(100);
+    }
     FastLED.delay(1000);
-    randomizeArr();
   }
 }
+
 void bubblesort(CRGB *leds)
 {
-  singlesort();
-  for (uint8_t x = 0; x < WIDTH; x++)
-  {
-    for (uint8_t y = 0; y < HEIGHT; y++)
-    {
-        if (y < arr[x]) {
-          leds[XY(x, y)] = CRGB(200, 200, 0);
-        } else {
-          leds[XY(x, y)] = CRGB(50, 20, 10);
-        }
-    }
-  }
+  singlesort(leds);
+  bubblesort_draw(leds);
 }
 
 #endif
