@@ -44,7 +44,7 @@ void setup() {
 
   // https://www.arduino.cc/reference/en/language/functions/external-interrupts/attachinterrupt/
   attachInterrupt(digitalPinToInterrupt(BUTTON_PIN), isr, FALLING);
-  shuffle();
+  shuffle(leds);
 }
 
 CRGBPalette16 palettes[4] = {
