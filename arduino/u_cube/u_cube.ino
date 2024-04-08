@@ -8,6 +8,7 @@
 #include "utils.h"
 #include "image.h"
 #include "game_of_life.h"
+#include "nanofont.h"
 // #include "gifs.h"
 #include "plasma.h"
 #include "sorting.h"
@@ -199,7 +200,6 @@ void lut_deformation(CRGB *leds)
 void three_d_checker(CRGB *leds)
 {
   // https://tixy.land/?code=%28%28%28x+-+8%29+%2F+y+%2B+t+*+5%29+%26+1+%5E+1+%2F+y+*+8+%26+1%29+*y+%2F+5%3B
-  Point_t p;
   float t = (float) millis() / 500.0;
   short x, y;
   float i;
@@ -213,7 +213,7 @@ void three_d_checker(CRGB *leds)
       i = (x - WIDTH/2) / (float)y + t;
       xx = (float)((int)i & (1 ^ 1) / y * 15 & 1) * y;
       i = xx * 16;
-      leds[XY(WIDTH - x - 1, HEIGHT-y - 1)] = CRGB(i, i, i);
+      leds[XY(WIDTH - x, HEIGHT - y)] = CRGB(i, i, i);
     }
   }
 }
@@ -246,14 +246,13 @@ typedef void (*Modes[])(CRGB *);
 
 Modes modes = {
     hbars,
+    nanofont,
     vbars,
     bubblesort,
-    three_d_checker,
-    // three_d_checker_vert,
     lut_deformation,
     draw_atari,
     draw_algorithm,
-    lines,
+    // lines,
     gol2,
     gol,
     noise_plasma,
@@ -261,9 +260,12 @@ Modes modes = {
     x0r_texture_static,
     x0r_texture_motion,
     jbl_ride,
-    // bitboard_test,
-    // gif_rgb,
-    //        gif_amiga,
+
+    //// three_d_checker,
+    //// three_d_checker_vert,
+    //// bitboard_test,
+    //// gif_rgb,
+    ////        gif_amiga,
 };
 
 void isr()

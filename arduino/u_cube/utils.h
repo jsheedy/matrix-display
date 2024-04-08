@@ -10,8 +10,6 @@ struct Point_t
   uint8_t y;
 };
 
-uint16_t XY_im(uint8_t x, uint8_t y);
-
 uint16_t XY(uint8_t x, uint8_t y);
 
 void draw_circle(CRGB *leds, uint8_t x, uint8_t y, uint8_t r, CRGB color);

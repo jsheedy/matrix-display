@@ -1,23 +1,19 @@
 #include "utils.h"
 
-uint16_t XY_im(uint8_t x, uint8_t y)
-{
-    return (uint16_t)(x)*WIDTH + y;
-}
-
 uint16_t XY(uint8_t x, uint8_t y)
 {
     if (x >= WIDTH || y >= HEIGHT)
     {
-        return NUM_LEDS;
+        return NUM_LEDS - 1;
     }
+
     if (x % 2 == 0)
     {
-        return XY_im(x, y);
+        return (uint16_t)(WIDTH - 1 - x) * HEIGHT + (HEIGHT - 1 - y);
     }
     else
     {
-        return ((uint16_t)(x) + 1) * WIDTH - 1 - y;
+        return (uint16_t)(WIDTH - 1 - x) * HEIGHT + (y);
     }
 }
 
