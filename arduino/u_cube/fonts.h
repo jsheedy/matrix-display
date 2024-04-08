@@ -15,7 +15,7 @@ void draw_char(CRGB *leds, short ul_x, short ul_y, uint8_t idx, CRGB color)
         {
             if (c & (1 << x))
             {
-                leds[XY(ul_x + x, ul_y + 8 - y)] = color;
+                leds[XY(ul_x - x, ul_y + 8 - y)] = color;
             }
         }
     }
@@ -31,11 +31,11 @@ void draw_string_horizontal(CRGB *leds, const __FlashStringHelper *msg, int x0, 
     do
     {
         i++;
-        x = x0 - i * 8;
-        if (x > (WIDTH + 8)) {
+        x = x0 + i * 8;
+        if (x < 0) {
             continue;
         }
-        if (x <= -8) {
+        if (x >= 36) {
             break;
         }
         // hat tip https://gist.github.com/sticilface/e54016485fcccd10950e93ddcd4461a3
@@ -48,7 +48,6 @@ void draw_string_horizontal(CRGB *leds, const __FlashStringHelper *msg, int x0, 
         {
             idx = 32; // space
         }
-        // y = beatsin8(60, 4, HEIGHT - 14, 0, i * 32);
         draw_char(leds, x, y, idx, color);
     } while (c != 0); //'\0');
 }
@@ -57,8 +56,8 @@ void draw_atari(CRGB *leds)
 {
     fadeToBlackBy(leds, NUM_LEDS, 80);
     CRGB color = ColorFromPalette(RainbowColors_p, millis() / 25);
-    int x = -16 + (millis() / 30) % (26 * 8 + WIDTH + 8);
-    draw_string_horizontal(leds, F("JOSEPH LUVS CAROL         "), x, color);
+    int x = WIDTH + 16 - (millis() / 80) % (26 * 8 + WIDTH + 8);
+    draw_string_horizontal(leds, F("ABCDEFGHIJKLMNOPQRSTUVWXYZ"), x, color);
 }
 
 void draw_algorithm(CRGB *leds)
@@ -66,17 +65,17 @@ void draw_algorithm(CRGB *leds)
     CRGB color = ColorFromPalette(RainbowColors_p, millis() / 25);
     fadeToBlackBy(leds, NUM_LEDS, 80);
 
-    draw_char(leds, 15, 15, 0, color); // A
-    draw_char(leds, 8, 15, 11, color); // L
-    draw_char(leds, 1, 15, 6, color);  // G
+    draw_char(leds, 1 + 7, 14, 0, color); // A
+    draw_char(leds, 8 + 7, 14, 11, color); // L
+    draw_char(leds, 15 + 7, 14, 6, color); // G
 
-    draw_char(leds, 15, 8, 14, color); // O
-    draw_char(leds, 8, 8, 17, color);  // R
-    draw_char(leds, 1, 8, 8, color);   // I
+    draw_char(leds, 1 + 7, 7, 14, color); // O
+    draw_char(leds, 8 + 7, 7, 17, color); // R
+    draw_char(leds, 15 + 7, 7, 8, color); // I
 
-    draw_char(leds, 15, 1, 19, color); // T
-    draw_char(leds, 8, 1, 7, color);   // H
-    draw_char(leds, 1, 1, 12, color);  // M
+    draw_char(leds, 1 + 7, 0, 19, color); // T
+    draw_char(leds, 8 + 7, 0, 7, color);  // H
+    draw_char(leds, 15 + 7, 0, 12, color); // M
 }
 
 #endif

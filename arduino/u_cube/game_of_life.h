@@ -82,7 +82,7 @@ void update_board(CRGB *leds) {
 void game_of_life(CRGB *leds, bool fade)
 {
 
-  EVERY_N_MILLISECONDS(50)
+  EVERY_N_MILLISECONDS(100)
   {
     update_board(leds);
     if (random(40) == 0)

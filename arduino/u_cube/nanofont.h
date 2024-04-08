@@ -2,6 +2,7 @@
 #define NANOFONT
 
 #include "constants.h"
+#include "bitboard.h"
 
 void draw_nanofont_char(CRGB *leds, short ul_x, short ul_y, uint8_t idx, CRGB color)
 {
@@ -16,7 +17,14 @@ void draw_nanofont_char(CRGB *leds, short ul_x, short ul_y, uint8_t idx, CRGB co
     for (uint8_t x = 0; x < 4; x++)
     {
       pix_on = word & (1 << (15 - (y * 4 + x)));
-      leds[XY(ul_x + x, ul_y - y)] = pix_on ? color : off_color;
+      if (pix_on) {
+        leds[XY(ul_x + x, ul_y - y)] = color;
+        bb_set(ul_x + x, ul_y - y, bitboard);
+
+      } else {
+        leds[XY(ul_x + x, ul_y - y)] = off_color;
+        bb_clear(ul_x + x, ul_y - y, bitboard);
+      }
     }
   }
 }
