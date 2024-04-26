@@ -56,7 +56,7 @@ void nanofont_draw_line(CRGB *leds, CRGB color, uint8_t *line)
   scroll_up_line(leds);
   for (int i = 0; i < 6; i++)
   {
-    draw_nanofont_char(leds, 4*i, 4, line[i], color);
+    draw_nanofont_char(leds, 4*i, 3, line[i], color);
     FastLED.delay(random(50, 200));
     FastLED.show();
   }
@@ -66,11 +66,28 @@ void nanofont(CRGB * leds)
 {
   CRGB color = ColorFromPalette(RainbowColors_p, millis() / 25);
 
-  uint8_t line[2][6] = {
+  // uint8_t line[2][6] = {
+  //   {35, 53, 52, 41, 37},
+  //   {38, 41, 33, 46, 35, 37}
+  // };
+
+  // paste in output from tools/text-to-nanofont.py here
+
+  uint8_t line[11][6] = {
     {35, 53, 52, 41, 37},
-    {38, 41, 33, 46, 35, 37}
+    {38, 41, 33, 46, 35, 37},
+    {36, 47, 0, 57, 47, 53},
+    {55, 33, 46, 46, 33},
+    {45, 33, 50, 50, 57},
+    {45, 37},
+    {50, 37, 33, 44},
+    {51, 47, 47, 46},
+    {},
+    {41, 0, 44, 47, 54, 37},
+    {57, 47, 53}
   };
-  for (int i=0; i < 2; i++) {
+  for (int i = 0; i < 11; i++)
+  {
     nanofont_draw_line(leds, color, line[i]);
   }
 }
