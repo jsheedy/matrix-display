@@ -2,6 +2,7 @@
 #define NANOFONT
 
 #include "constants.h"
+#include "utils.h"
 #include "bitboard.h"
 
 void draw_nanofont_char(CRGB *leds, short ul_x, short ul_y, uint8_t idx, CRGB color)
@@ -43,18 +44,66 @@ void nanofont_test(CRGB *leds) {
 void nanofont(CRGB *leds) {
   CRGB color = ColorFromPalette(RainbowColors_p, millis() / 25);
 
-  draw_nanofont_char(leds, 0, 22, 35, color); // C
-  draw_nanofont_char(leds, 4, 22, 53, color); // U
-  draw_nanofont_char(leds, 8, 22, 52, color); // T
-  draw_nanofont_char(leds, 12, 22, 41, color); // I
-  draw_nanofont_char(leds, 16, 22, 37, color); // E
+  draw_nanofont_char(leds, 0, 7, 35, color); // C
+  FastLED.delay(random(50, 200));
+  FastLED.show();
+  draw_nanofont_char(leds, 4, 7, 53, color); // U
+  FastLED.delay(random(50, 200));
+  FastLED.show();
+  draw_nanofont_char(leds, 8, 7, 52, color); // T
+  FastLED.delay(random(50, 200));
+  FastLED.show();
+  draw_nanofont_char(leds, 12, 7, 41, color); // I
+  FastLED.delay(random(50, 200));
+  FastLED.show();
+  draw_nanofont_char(leds, 16, 7, 37, color); // E
+  FastLED.delay(random(50, 200));
+  FastLED.show();
 
-  draw_nanofont_char(leds, 0, 18, 38, color); // F
-  draw_nanofont_char(leds, 4, 18, 41, color); // I
-  draw_nanofont_char(leds, 8, 18, 33, color); // A
-  draw_nanofont_char(leds, 12, 18, 46, color); // N
-  draw_nanofont_char(leds, 16, 18, 35, color); // C
-  draw_nanofont_char(leds, 20, 18, 37, color); // E
+  draw_nanofont_char(leds, 0, 3, 38, color); // F
+  FastLED.delay(random(50, 200));
+  FastLED.show();
+  draw_nanofont_char(leds, 4, 3, 41, color); // I
+  FastLED.delay(random(50, 200));
+  FastLED.show();
+  draw_nanofont_char(leds, 8, 3, 33, color); // A
+  FastLED.delay(random(50, 200));
+  FastLED.show();
+  draw_nanofont_char(leds, 12, 3, 46, color); // N
+  FastLED.delay(random(50, 200));
+  FastLED.show();
+  draw_nanofont_char(leds, 16, 3, 35, color); // C
+  FastLED.delay(random(50, 200));
+  FastLED.show();
+  draw_nanofont_char(leds, 20, 3, 37, color); // E
+  FastLED.delay(random(50, 200));
+  FastLED.show();
+
+  scroll_up(leds);
+  FastLED.delay(120);
+  FastLED.show();
+  scroll_up(leds);
+  FastLED.delay(110);
+  FastLED.show();
+  scroll_up(leds);
+  FastLED.delay(100);
+  FastLED.show();
+  scroll_up(leds);
+  FastLED.delay(130);
+  FastLED.show();
+
+  scroll_up(leds);
+  FastLED.delay(120);
+  FastLED.show();
+  scroll_up(leds);
+  FastLED.delay(110);
+  FastLED.show();
+  scroll_up(leds);
+  FastLED.delay(100);
+  FastLED.show();
+  scroll_up(leds);
+  FastLED.delay(130);
+  FastLED.show();
 
 }
 

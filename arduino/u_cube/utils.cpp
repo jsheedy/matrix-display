@@ -36,3 +36,14 @@ void draw_circle(CRGB *leds, uint8_t x, uint8_t y, uint8_t r, CRGB color)
         }
     }
 }
+
+void scroll_up(CRGB *leds)
+{
+    for (int y = HEIGHT - 1; y > 0; y--)
+    {
+        for (int x = 0; x < WIDTH; x++)
+        {
+            leds[XY(x, y)] = leds[XY(x, y - 1)];
+        }
+    }
+}
