@@ -41,70 +41,38 @@ void nanofont_test(CRGB *leds) {
   }
 }
 
-void nanofont(CRGB *leds) {
+void scroll_up_line(CRGB *leds)
+{
+  for (int i = 0; i < 4; i++)
+  {
+    scroll_up(leds);
+    FastLED.delay(random(80, 200));
+    FastLED.show();
+  }
+}
+
+void nanofont_draw_line(CRGB *leds, CRGB color, uint8_t *line)
+{
+  scroll_up_line(leds);
+  for (int i = 0; i < 6; i++)
+  {
+    draw_nanofont_char(leds, 4*i, 4, line[i], color);
+    FastLED.delay(random(50, 200));
+    FastLED.show();
+  }
+}
+
+void nanofont(CRGB * leds)
+{
   CRGB color = ColorFromPalette(RainbowColors_p, millis() / 25);
 
-  draw_nanofont_char(leds, 0, 7, 35, color); // C
-  FastLED.delay(random(50, 200));
-  FastLED.show();
-  draw_nanofont_char(leds, 4, 7, 53, color); // U
-  FastLED.delay(random(50, 200));
-  FastLED.show();
-  draw_nanofont_char(leds, 8, 7, 52, color); // T
-  FastLED.delay(random(50, 200));
-  FastLED.show();
-  draw_nanofont_char(leds, 12, 7, 41, color); // I
-  FastLED.delay(random(50, 200));
-  FastLED.show();
-  draw_nanofont_char(leds, 16, 7, 37, color); // E
-  FastLED.delay(random(50, 200));
-  FastLED.show();
-
-  draw_nanofont_char(leds, 0, 3, 38, color); // F
-  FastLED.delay(random(50, 200));
-  FastLED.show();
-  draw_nanofont_char(leds, 4, 3, 41, color); // I
-  FastLED.delay(random(50, 200));
-  FastLED.show();
-  draw_nanofont_char(leds, 8, 3, 33, color); // A
-  FastLED.delay(random(50, 200));
-  FastLED.show();
-  draw_nanofont_char(leds, 12, 3, 46, color); // N
-  FastLED.delay(random(50, 200));
-  FastLED.show();
-  draw_nanofont_char(leds, 16, 3, 35, color); // C
-  FastLED.delay(random(50, 200));
-  FastLED.show();
-  draw_nanofont_char(leds, 20, 3, 37, color); // E
-  FastLED.delay(random(50, 200));
-  FastLED.show();
-
-  scroll_up(leds);
-  FastLED.delay(120);
-  FastLED.show();
-  scroll_up(leds);
-  FastLED.delay(110);
-  FastLED.show();
-  scroll_up(leds);
-  FastLED.delay(100);
-  FastLED.show();
-  scroll_up(leds);
-  FastLED.delay(130);
-  FastLED.show();
-
-  scroll_up(leds);
-  FastLED.delay(120);
-  FastLED.show();
-  scroll_up(leds);
-  FastLED.delay(110);
-  FastLED.show();
-  scroll_up(leds);
-  FastLED.delay(100);
-  FastLED.show();
-  scroll_up(leds);
-  FastLED.delay(130);
-  FastLED.show();
-
+  uint8_t line[2][6] = {
+    {35, 53, 52, 41, 37},
+    {38, 41, 33, 46, 35, 37}
+  };
+  for (int i=0; i < 2; i++) {
+    nanofont_draw_line(leds, color, line[i]);
+  }
 }
 
 #endif
