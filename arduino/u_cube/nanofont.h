@@ -66,11 +66,6 @@ void nanofont(CRGB * leds)
 {
   CRGB color = ColorFromPalette(RainbowColors_p, millis() / 25);
 
-  // uint8_t line[2][6] = {
-  //   {35, 53, 52, 41, 37},
-  //   {38, 41, 33, 46, 35, 37}
-  // };
-
   // paste in output from tools/text-to-nanofont.py here
 
   uint8_t line[11][6] = {
@@ -90,6 +85,12 @@ void nanofont(CRGB * leds)
   {
     nanofont_draw_line(leds, color, line[i]);
   }
+  scroll_up_line(leds);
+  scroll_up_line(leds);
+  scroll_up_line(leds);
+  scroll_up_line(leds);
+  scroll_up_line(leds);
+  scroll_up_line(leds);
 }
 
 #endif

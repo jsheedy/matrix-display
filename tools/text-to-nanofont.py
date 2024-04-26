@@ -12,7 +12,6 @@ SOON
 
 I LOVE
 YOU
-
 """.strip()
 
 if __name__ == "__main__":
