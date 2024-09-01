@@ -1,17 +1,16 @@
 #!/usr/bin/env python
 
 message = """
-CUTIE
-FIANCE
-DO YOU
-WANNA
-MARRY
-ME
-REAL
-SOON
+WISDOM
 
-I LOVE
-YOU
+COUR-
+AGE
+
+JUST
+-ICE
+
+TEMPE-
+RANCE
 """.strip()
 
 if __name__ == "__main__":
