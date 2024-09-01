@@ -13,5 +13,6 @@ struct Point_t
 uint16_t XY(uint8_t x, uint8_t y);
 
 void draw_circle(CRGB *leds, uint8_t x, uint8_t y, uint8_t r, CRGB color);
+void scroll_up(CRGB *leds);
 
 #endif
